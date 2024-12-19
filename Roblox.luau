@@ -274,7 +274,6 @@ function library.new(library, name,theme)
 -------------------------LSTMArchive------------------------------
 LSTransparency = 0.6
 LScolor = Color3.fromRGB(255, 0, 0)
-UIGradient.Parent = LScolor
 -------------------------LSTMArchive------------------------------
 if theme == 'dark' then
     MainColor = Color3.fromRGB(25, 25, 25)
