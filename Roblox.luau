@@ -417,46 +417,6 @@ end
       ScriptTitle.TextXAlignment = Enum.TextXAlignment.Left
       
       UIGradientTitle.Parent = ScriptTitle
-     
-      ServerTime.Name = "ServerTime"
-      ServerTime.Parent = Side
-      ServerTime.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-      ServerTime.BackgroundTransparency = 1.000
-      ServerTime.Position = UDim2.new(0, 0, 0.00953488424, 0)
-      ServerTime.Size = UDim2.new(0, 0, 0, 25)
-      ServerTime.Font = Enum.Font.GothamSemibold
-      ServerTime.Text = ""
-      ServerTime.TextSize = 14.000
-      ServerTime.TextColor3 = LScolor
-      ServerTime.TextXAlignment = Enum.TextXAlignment.Right
-      
-      UIGradientTitle.Parent = ScriptTitle
-      
-      function osfunc:Set(textadd)
-      ServerTime.Text = textadd
-      end
-      
-      local function UpdateOS()
-      local date = os.date("*t")
-      local hour = (date.hour) % 24
-      local ampm = hour < 12 and "时间" or "时间"
-      local timezone = string.format("%02i:%02i:%02i %s", ((hour -1) % 12) + 1, date.min, date.sec, ampm)
-      local datetime = string.format("%02d/%02d/%04d", date.day, date.month, date.year)
-      local LocalizationService = game:GetService("LocalizationService")
-      local Players = game:GetService("Players")
-      local player = Players.LocalPlayer
-      local name = player.Name
-      local result, code = pcall(function()
-       return LocalizationService:GetCountryRegionForPlayerAsync(player)
-       end)
-      osfunc:Set(datetime.." - "..timezone.." [ " .. code .. " ]")
-      end
-      spawn(function()
-       while true do
-       UpdateOS()
-       game:GetService("RunService").RenderStepped:Wait()
-       end
-       end)
 
       local function NPLHKB_fake_script() 
         local script = Instance.new('LocalScript', ScriptTitle)
@@ -581,20 +541,23 @@ end
       end)
 ]]
 
+function Tween(obj, t, data)
+    TweenService:Create(obj, TweenInfo.new(t[1], Enum.EasingStyle[t[2]], Enum.EasingDirection[t[3]]), data):Play()
+end
 
--- Properties:
-
+local Frame = Instance.new("Frame")
 Frame.Parent = dogent
 Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BorderSizePixel = 0
-Frame.Position = UDim2.new(0.00829315186, 0, 0.31107837, 0)
+Frame.Position = UDim2.new(0.5, 0, 0.43, 0)
 Frame.Size = UDim2.new(0, 50, 0, 50)
 Frame.BackgroundTransparency = 1.000
-
+local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 90)
 UICorner.Parent = Frame
 
+local Open = Instance.new("ImageButton")
 Open.Parent = Frame
 Open.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Open.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -604,14 +567,15 @@ Open.Active = true
 Open.Draggable = true
 Open.Image = "rbxassetid://18107430261"
 Open.MouseButton1Click:Connect(function()
-  Main.Visible = not Main.Visible
-  Open.Image = Main.Visible and "rbxassetid://18107430261" or "rbxassetid://18107430261" --开关的图
-end)
-
-UICorner_2.CornerRadius = UDim.new(0, 90)
-UICorner_2.Parent = Open
-UIG.Parent = Open
-      
+    if Main.Visible then
+        Tween(Frame, {0.3, 'Linear', 'InOut'}, {Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1})
+        Tween(Open, {0.3, 'Linear', 'InOut'}, {Position = UDim2.new(0.5, -25, 0.5, -25), Size = UDim2.new(0, 0, 0, 0)})
+    else
+        Tween(Frame, {0.3, 'Linear', 'InOut'}, {Size = UDim2.new(0.1, 0, 0.2, 0), BackgroundTransparency = 0.6})
+        Tween(Open, {0.3, 'Linear', 'InOut'}, {Position = UDim2.new(0.5, 0, 0.43, 0), Size = UDim2.new(0, 50, 0, 50)})
+    end
+    Main.Visible = not Main.Visible
+end
       if not game:GetService("CoreGui"):FindFirstChild("NotificationLibrary") then
       local notificationLibrary = Instance.new("ScreenGui")
       notificationLibrary.Name = "NotificationLibrary"
